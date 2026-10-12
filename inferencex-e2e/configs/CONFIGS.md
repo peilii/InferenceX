@@ -242,7 +242,7 @@ schema; unknown keys fail.
   recorded `scope`, `gpu_gfx_activity`, `gpu_junction_temperature`); unknown keys such as
   the former `power_profile` are rejected. The image is the public
   `ghcr.io#semianalysisai/amd-device-metrics-exporter@sha256:0d1c32c965f955b0fbf1dc87a84f7205be9019ce8d2fdf1eb929de28c71cec54`
-  (tag `highres-privatedrop-20261008`), AMD's v1.5.4-based high-resolution build from their
+  (tag `v1.5.4-highres-20261008`), AMD's v1.5.4-based high-resolution build from their
   2026-10-08 private drop: a GPUWatch stream inside the exporter samples each GPU once per
   second into an in-memory store that `/metrics` is served from, so a scrape no longer
   triggers an `amd-smi` call (the single-threaded library that made the earlier
