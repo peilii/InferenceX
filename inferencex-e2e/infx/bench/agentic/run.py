@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import argparse
-import datetime
+import datetime as dt
 import os
 import shlex
 import sys
@@ -164,8 +164,9 @@ def _open_power_window(plan: Plan, python: str, env: Mapping[str, str]) -> int:
     """Record the replay clock's UTC offset and open srt-slurm's measurement window."""
     if plan.power != "window":
         return 0
-    # AIPerf exports naive local datetimes; the adapter normalizes its profiling window.
-    now = datetime.datetime.now(datetime.timezone.utc).astimezone()
+    # AIPerf exports naive local datetimes; the adapter uses this offset to normalize
+    # the profiling window to Unix time.
+    now = dt.datetime.now(dt.timezone.utc).astimezone()
     (plan.result_dir / "agentic_power_timezone_offset.txt").write_text(f"{now:%z}\n")
     rc = _power_adapter(plan, python, env, *_window(plan, "running"))
     if rc:
