@@ -241,13 +241,18 @@ schema; unknown keys fail.
   `gpu_metrics` the power, utilization and temperature metrics (`gpu_power_usage` with its
   recorded `scope`, `gpu_gfx_activity`, `gpu_junction_temperature`); unknown keys such as
   the former `power_profile` are rejected. The image is the public
-  `ghcr.io#semianalysisai/amd-device-metrics-exporter@sha256:8a3fe70b8a848ca10a7fd90862d1d9e41e9c7b6314669a2e8340c646e6dae15c`,
-  AMD nightly `build-dme-10.2.0a20261001` with AMD's 255 W power-reading fix plus our
-  cache-TTL patch, started with `env AMD_GPU_GET_CACHE_TTL=0s /home/amd/tools/entrypoint.sh`
-  on port `19500` and resolved by digest through the cluster's `squash` settings like any
+  `ghcr.io#semianalysisai/amd-device-metrics-exporter@sha256:0d1c32c965f955b0fbf1dc87a84f7205be9019ce8d2fdf1eb929de28c71cec54`
+  (tag `highres-privatedrop-20261008`), AMD's v1.5.4-based high-resolution build from their
+  2026-10-08 private drop: a GPUWatch stream inside the exporter samples each GPU once per
+  second into an in-memory store that `/metrics` is served from, so a scrape no longer
+  triggers an `amd-smi` call (the single-threaded library that made the earlier
+  cache-TTL patch necessary). It starts with the plain `/home/amd/tools/entrypoint.sh` on
+  port `19500` and is resolved by digest through the cluster's `squash` settings like any
   other image. It reads
   [`runners/srt-slurm/exporters/amd-power.json`](../runners/srt-slurm/exporters/amd-power.json),
-  which the driver mounts at `/etc/metrics/config.json`. Until NVIDIA/srt-slurm#573 merges,
+  which the driver mounts at `/etc/metrics/config.json`; that file enables
+  `CommonConfig.HighResolution` (`FastPeriodSecs: 1`, `SlowPeriodSecs: 5`, read at startup)
+  and disables the health service, as AMD's drop notes recommend. Until NVIDIA/srt-slurm#573 merges,
   [`573-participating-gpus.patch`](../runners/srt-slurm/patches/README.md) keeps
   worker-node sample rows to the GPUs the job uses; without it a TP4 job on an eight-GPU
   node records `unexpected_device`. Single-node matrix rows still reject `require-power`; a

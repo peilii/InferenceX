@@ -25,14 +25,14 @@ sys.path.insert(0, str(ROOT / "utils/srt-slurm/src"))
 from srtctl.core.config import resolve_config_with_defaults  # noqa: E402
 from srtctl.core.schema import ClusterConfig  # noqa: E402
 
-# The exporter block every AMD cluster record carries: our fixed device-metrics-exporter
-# build, read by srt-slurm's `kind: custom` power collector. The `scope` string keeps
-# manifests comparable with earlier AMD runs.
+# The exporter block every AMD cluster record carries: AMD's high-resolution
+# device-metrics-exporter build, read by srt-slurm's `kind: custom` power collector. The
+# `scope` string keeps manifests comparable with earlier AMD runs.
 AMD_EXPORTER = {
     "container_image": "ghcr.io#semianalysisai/amd-device-metrics-exporter@sha256:"
-    "8a3fe70b8a848ca10a7fd90862d1d9e41e9c7b6314669a2e8340c646e6dae15c",
+    "0d1c32c965f955b0fbf1dc87a84f7205be9019ce8d2fdf1eb929de28c71cec54",
     "port": 19500,
-    "command": "env AMD_GPU_GET_CACHE_TTL=0s /home/amd/tools/entrypoint.sh",
+    "command": "/home/amd/tools/entrypoint.sh",
     "kind": "custom",
     "gpu_labels": {"index": "gpu_id", "identity": "serial_number"},
     "gpu_metrics": {

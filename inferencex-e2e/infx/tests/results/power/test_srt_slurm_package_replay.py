@@ -45,7 +45,7 @@ from srtctl.core.topology import Process  # noqa: E402
 PRODUCER_SHA = "641a07f2d465847fe51d8d8db275366651d9ebef"
 AMD_IMAGE = (
     "ghcr.io#semianalysisai/amd-device-metrics-exporter@sha256:"
-    "8a3fe70b8a848ca10a7fd90862d1d9e41e9c7b6314669a2e8340c646e6dae15c"
+    "0d1c32c965f955b0fbf1dc87a84f7205be9019ce8d2fdf1eb929de28c71cec54"
 )
 AMD_SCOPE = "gpu_device_power_as_reported_by_amd_device_metrics_exporter"
 # The default_gpu_exporter block the MI300X/MI325X/MI355X clusters run with.
@@ -53,7 +53,7 @@ AMD_EXPORTER = TelemetryExporterConfig.Schema().load(
     {
         "container_image": AMD_IMAGE,
         "port": 19500,
-        "command": "env AMD_GPU_GET_CACHE_TTL=0s /home/amd/tools/entrypoint.sh",
+        "command": "/home/amd/tools/entrypoint.sh",
         "kind": "custom",
         "gpu_labels": {"index": "gpu_id", "identity": "serial_number"},
         "gpu_metrics": {
